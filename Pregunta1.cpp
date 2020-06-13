@@ -1,99 +1,78 @@
 #include <iostream>
 #include <vector>
 
-std::vector<std::pair<int,int>> minMatching(std::vector<int> A, std::vector<int> B, int p, double* peso) {
-    std::vector<int> Asizes, Bsizes;
-    std::vector<std::pair<int, int>> Matching;
-    auto it = A.begin();
-    while (it != A.end()) {
-        while (*it == 0)
-            it++;
+std::vector<int> getBlocks(std::vector<int> array) {
+    std::vector<int> blocks;
+    auto arrayIt = array.begin();
+    while (arrayIt != array.end()) {
+        while (*arrayIt == 0)
+            arrayIt++;
         int size = 0;
-        if (*it == 1) {
-            while (*it == 1) {
+        if (*arrayIt == 1) {
+            while (*arrayIt == 1) {
                 size++;
-                it++;
+                arrayIt++;
             }
-            Asizes.emplace_back(size);
+            blocks.emplace_back(size);
         }
     }
-    it = B.begin();
-    while (it != B.end()) {
-        while (*it == 0)
-            it++;
-        int size = 0;
-        if (*it == 1) {
-            while (*it == 1) {
-                size++;
-                it++;
-            }
-            Bsizes.emplace_back(size);
-        }
-    }
-    int n = Asizes.size(), m = Bsizes.size(), i = 0, j = 0;
+    return blocks;
+}
 
-    while (i + 1 < n && j + 1 < m) {
-        if (Asizes[i] > Bsizes[j]) { // Dividir
-            int Asize = Asizes[i];
-            while (Asize > 0) {
-                Matching.emplace_back(i + 1, j + 1);
-                Asize -= Bsizes[j];
+double minMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair<int,int>>* matching) {
+    std::vector<int> blocksA = getBlocks(std::move(A));
+    std::vector<int> blocksB = getBlocks(std::move(B));
+    int m = blocksA.size();
+    int n = blocksB.size();
+    double peso = 0;
+    if (m > n) {    // Agrupacion
+        float ratio = (float)m / (float)n;
+        float max_i = ratio;
+        int j = 1;
+        int num = 0;
+        for (int i = 1; i <= m; ++i) {
+            if ((float)i <= max_i) {
+                matching->emplace_back(i, j);
+                num += blocksA[i-1];
+            }
+            else {
+                peso += (double)num / blocksB[j-1];
+                num = blocksA[i-1];
+                max_i += ratio;
                 j++;
+                matching->emplace_back(i, j);
             }
-            i++;
-        } else {
-            int Bsize = Bsizes[j];
-            while (Bsize > 0) {
-                Matching.emplace_back(i + 1, j + 1);
-                Bsize -= Asizes[i];
+        }
+        peso += (double)num / blocksB[j-1];
+    } else {        // Division
+        float ratio = (float)n / (float)m;
+        float max_j = ratio;
+        int i = 1;
+        int den = 0;
+        for (int j = 1; j <= n; ++j) {
+            if ((float)j <= max_j) {
+                matching->emplace_back(i, j);
+                den += blocksB[j-1];
+            }
+            else {
+                peso += (double)blocksA[i-1] / den;
+                den = blocksB[j-1];
+                max_j += ratio;
                 i++;
-            }
-            j++;
-        }
-    }
-    if (i + 1 < n) { // Agrupar en B_final
-        while (i < n) {
-            Matching.emplace_back(i + 1, j + 1);
-            i++;
-        }
-    } else { // Dividir A_final
-        while (j < m) {
-            Matching.emplace_back(i + 1, j + 1);
-            j++;
-        }
-    }
-    int k = 0;
-    *peso = 0;
-    while (k < Matching.size()) {
-        int numerator, denominator;
-        if (Matching[k].first == Matching[k + 1].first) { // Division
-            numerator = Asizes[Matching[k].first - 1];
-            denominator = Bsizes[Matching[k].second - 1];
-            while (Matching[k].first == Matching[k + 1].first) {
-                denominator += Bsizes[Matching[k + 1].second - 1];
-                k++;
-            }
-        } else { // Agrupacion
-            numerator = Asizes[Matching[k].first - 1];
-            denominator = Bsizes[Matching[k].second - 1];
-            while (Matching[k].second == Matching[k + 1].second) {
-                numerator += Asizes[Matching[k + 1].first - 1];
-                k++;
+                matching->emplace_back(i, j);
             }
         }
-        k++;
-        *peso += (double) numerator / denominator;
+        peso += (double)blocksA[i-1] / den;
     }
-
-    return Matching;
+    return peso;
 }
 
 int main() {
     std::vector<int> A = {0,1,1,1,0,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0};
     std::vector<int> B = {0,0,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,1,1,0};
-    double peso = 0;
-    auto Matching  = minMatching(A, B, A.size(), &peso);
-    for (auto pair : Matching) {
+    std::vector<std::pair<int,int>> matching;
+    double peso  = minMatching(A, B, &matching);
+    for (auto pair : matching) {
         std::cout << "(" << pair.first << "," << pair.second << ")\n";
     }
     std::cout << "Peso: " << peso << std::endl;
