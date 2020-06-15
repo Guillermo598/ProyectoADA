@@ -1,15 +1,21 @@
 #include <iostream>
 #include <vector>
+#include <sstream>
 #define INF 100000000
 
 std::vector<int> getBlocks(std::vector<int> array);
+std::vector<int> getVectorFromString(std::string);
 double MemoMinMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair<int,int>>* matching);
 double MemoMinMatchingRec(std::vector<int> blocksA, std::vector<int> blocksB, int i, int j,
                           std::vector<std::pair<int,int>>** matching, double** memo);
 
 int main() {
-    std::vector<int> A = {0,1,1,1,0,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0};
-    std::vector<int> B = {0,0,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,1,1,0};
+    std::string stringA, stringB;
+    std::getline(std::cin, stringA);
+    std::getline(std::cin, stringB);
+    std::vector<int> A = getVectorFromString(stringA);
+    std::vector<int> B = getVectorFromString(stringB);
+
     std::vector<std::pair<int,int>> matching;
     double peso = MemoMinMatching(A, B, &matching);
     for (auto pair : matching) {
@@ -116,3 +122,11 @@ double MemoMinMatchingRec(std::vector<int> blocksA, std::vector<int> blocksB, in
     return peso;
 }
 
+std::vector<int> getVectorFromString(std::string s) {
+    std::vector<int> v;
+    int i;
+    std::stringstream stream(s);
+    while (stream >> i)
+        v.push_back(i);
+    return v;
+}
