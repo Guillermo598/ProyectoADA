@@ -1,6 +1,21 @@
 #include <iostream>
 #include <vector>
 
+std::vector<int> getBlocks(std::vector<int> array);
+double GreedyMinMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair<int,int>>* matching);
+
+int main() {
+    std::vector<int> A = {0,1,1,1,0,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0};
+    std::vector<int> B = {0,0,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,1,1,0};
+    std::vector<std::pair<int,int>> matching;
+    double peso  = GreedyMinMatching(A, B, &matching);
+    for (auto pair : matching) {
+        std::cout << "(" << pair.first << "," << pair.second << ")\n";
+    }
+    std::cout << "Peso: " << peso << std::endl;
+}
+
+
 std::vector<int> getBlocks(std::vector<int> array) {
     std::vector<int> blocks;
     auto arrayIt = array.begin();
@@ -19,9 +34,9 @@ std::vector<int> getBlocks(std::vector<int> array) {
     return blocks;
 }
 
-double minMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair<int,int>>* matching) {
-    std::vector<int> blocksA = getBlocks(std::move(A));
-    std::vector<int> blocksB = getBlocks(std::move(B));
+double GreedyMinMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair<int,int>>* matching) {
+    std::vector<int> blocksA = getBlocks(A);
+    std::vector<int> blocksB = getBlocks(B);
     int m = blocksA.size();
     int n = blocksB.size();
     double peso = 0;
@@ -65,15 +80,4 @@ double minMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair
         peso += (double)blocksA[i-1] / den;
     }
     return peso;
-}
-
-int main() {
-    std::vector<int> A = {0,1,1,1,0,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0};
-    std::vector<int> B = {0,0,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,1,1,0};
-    std::vector<std::pair<int,int>> matching;
-    double peso  = minMatching(A, B, &matching);
-    for (auto pair : matching) {
-        std::cout << "(" << pair.first << "," << pair.second << ")\n";
-    }
-    std::cout << "Peso: " << peso << std::endl;
 }
