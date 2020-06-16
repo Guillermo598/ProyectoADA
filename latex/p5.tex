@@ -1,0 +1,24 @@
+\subsection*{Pregunta 5 (DP)}
+\subsubsection*{Pseudocódigo}
+
+\begin{verbatim}
+    Min-Matching(A, B)
+        blocksA=GetBlocks(A)
+        blocksB=GetBlocks(B)
+        n=blocksA.size
+        m=blocksB.size
+        Matching[n][m]
+        for i=0 to n
+            for j=0 to m
+                if i=1
+                    Matching[i][j]=blocksA[1]/sum(blocksB[1], blocksB[j])
+                if j=1
+                    Matching[i][j]=sum(blocksA[i], blocksA[i])/blocksB[1] 
+                else
+                    for x=1 to i-1
+                        cur=min(Matching[x][j-1]+sum(blocksA[x+1], blocksA[i])/blocksB[j], cur)
+                    for y=1 to j-1
+                        cur=min(Matching[i-1][y]+blocksA[i]/sum(blocksBy+1], blocksB[j]), cur)
+                    Matching[i][j]=cur
+\end{verbatim}
+\subsubsection*{Análisis}

@@ -1,0 +1,59 @@
+\subsection*{Pregunta 3 (Recursivo)}
+\subsubsection*{Pseudocódigo}
+Este primer algoritmo es el principal. Transforma los arreglos a bloques y llama a la subrutina recursiva con los valores obtenidos. Esta subrutina, mostrada a continuación del primero, es la transformación de la fórmula de recurrencia presentada previamente a pseudocódigo.
+\subsubsection*{}
+Recibe: dos arreglos de ceros y unos
+
+Devuelve: un matching de peso mínimo entre los dos arreglos, y el respectivo peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{RecursiveMinMatching}}$(A,B)$
+  \STATE $blocksA = \textsc{GetBlocks$(A)$}$
+  \STATE $blocksB = \textsc{GetBlocks$(B)$}$
+  \STATE $m = blocksA.size$
+  \STATE $n = blocksB.size$
+  \RETURN $\textsc{RecursiveMinMatchingRec$(blocksA,blocksB,m,n)$}$
+\end{algorithmic}
+\subsubsection*{}
+Recibe: dos arreglos de tamaños de bloques, y la cantidad de bloques a usar
+
+Devuelve: un matching de peso mínimo entre los bloques usados y su peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{RecursiveMinMatchingRec}}$(blocksA,blocksB,i,j)$
+  \IF{$i=1$}
+    \STATE $w=blocksA[1]/(sum(blocksB[1]..blocksB[j])$
+    \STATE $matching.push((1,1)..(1,j))$
+    \RETURN $matching,w$
+  \ENDIF
+  \IF{$j=1$}
+    \STATE $w=sum(blocksA[1]..blocksA[i])/blocksB[1]$
+    \STATE $matching.push((1,1)..(i,1))$
+    \RETURN $matching,w$
+  \ENDIF
+    \STATE $w = INF$
+    \FOR{x=1 TO i-1}
+        \STATE $group,w_g=\textsc{RecursiveMinMatchingRec$(blocksA, blocksB, x,j-1)$}$
+        \STATE $w_g = w_g +sum(blocksA[x+1]..blocksA[i])/blocksB[j])$
+        \STATE $group.push((x+1,j)..(i,j))$
+        \IF{$w_g < w$}
+            \STATE $w = w_g$
+            \STATE $matching = group$
+        \ENDIF
+    \ENDFOR
+    \FOR{y=1 TO j-1}
+        \STATE $divide,w_d=\textsc{RecursiveMinMatchingRec$(blocksA, blocksB, i-1, y)$}$
+        \STATE $w_d = w_d + blocksA[i]/sum(blocksB[y+1]..blocksB[j])$
+        \STATE $divide.push((i,y+1)..(i,j))$
+        \IF{$w_d < w$}
+            \STATE $w = w_d$
+            \STATE $matching = divide$
+        \ENDIF
+    \ENDFOR
+    \RETURN $matching,w$
+\end{algorithmic}
+\subsubsection*{Análisis}
+Como la llamada recursiva siempre reduce los valores de $m$ y $n$ por lo menos en 1, el árbol de recursión tendrá, a lo máximo, altura de $min(m,n)$. Además, para cualquier pares de $m$ y $n$ en los que ambos son mayores a 1, siempre llamarán dos veces al la recursión con valores $m-1$ y $n-1$, dejando de lado todas las otras llamadas. Esto quiere decir que, solo tomando una pequeña fracción de las llamadas recursivas, estas se doblan con cada nivel del arbol. Así, tenemos una cota muy inferior de $\Omega(2^{min(m,n)})$. 
+
+Si evaluamos la recursión de forma más completa, una llamada con valores $m$ y $n$ resultan en $m+n-2$ llamadas recursivas, ya que $Agrupar$ y $Dividir$ llaman a la recursión $m-1$ y $n-1$ respectivamente. Así, podemos afirmar que la cantidad de llamadas recursivas depende más del valor máximo entre $m$ y $n$. Por lo tanto, es más preciso decir que la recursión tiene un tiempo de ejecución de $\Omega(max(m,n)^{min(m,n)})$, y eso es si el algoritmo en sí toma tiempo constante, lo cual está muy alejado de la realidad.
+
+\subsubsection*{Implementación}
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta3.cpp}{link}.

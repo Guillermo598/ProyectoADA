@@ -1,0 +1,65 @@
+\subsection*{Pregunta 4 (Memoizado)}
+\subsubsection*{Pseudocódigo}
+Este primer algoritmo es el principal. Transforma los arreglos a bloques, crea los arreglos donde se guardarán los pesos con sus respectivos matching, llama a la subrutina recursiva. Esta subrutina, mostrada a continuación del primero, es el algoritmo recursivo transformado a memoizado. Los pesos y sus respectivos matching solo se cáculan si es que no han sido obtenidos previamente.
+\subsubsection*{}
+Recibe: dos arreglos de ceros y unos
+
+Devuelve: un matching de peso mínimo entre los dos arreglos, y el respectivo peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{MemoMinMatching}}$(A,B)$
+  \STATE $blocksA = \textsc{GetBlocks$(A)$}$
+  \STATE $blocksB = \textsc{GetBlocks$(B)$}$
+  \STATE $m = blocksA.size$
+  \STATE $n = blocksB.size$
+  \STATE $matching[m][n]$
+  \STATE $memo[m][n] = INF$
+  \RETURN $\textsc{MemoMinMatchingRec$(blocksA,blocksB,m,n,matching,memo)$}$
+\end{algorithmic}
+\subsubsection*{}
+Recibe: dos arreglos de tamaños de bloques, la cantidad de bloques a usar, y la memoria
+
+Devuelve: un matching entre los bloques usados de peso mínimo
+\begin{algorithmic}[1]
+  \TITLE{\textsc{MemoMinMatchingRec}}$(blocksA,blocksB,i,j,matching,memo)$
+  \IF{$memo[i][j] \neq INF$}
+    \RETURN $matching[i][j],memo[i][j]$
+  \ENDIF
+  \IF{$i=1$}
+    \STATE $w=blocksA[1]/(sum(blocksB[1]..blocksB[j])$
+    \STATE $matching[i][j].push((1,1)..(1,j))$
+    \STATE $memo[i][j] = w$
+    \RETURN $matching[i][j],w$
+  \ENDIF
+  \IF{$j=1$}
+    \STATE $w=sum(blocksA[1]..blocksA[i])/blocksB[1]$
+    \STATE $matching[i][j].push((1,1)..(i,1))$
+    \STATE $memo[i][j] = w$
+    \RETURN $matching[i][j],w$
+  \ENDIF
+    \STATE $w = INF$
+    \FOR{x=1 TO i-1}
+        \STATE $group,w_g=\textsc{MemoMinMatchingRec$(blocksA, blocksB, x,j-1,matching,memo)$}$
+        \STATE $w_g = w_g +sum(blocksA[x+1]..blocksA[i])/blocksB[j])$
+        \STATE $group.push((x+1,j)..(i,j))$
+        \IF{$w_g < w$}
+            \STATE $w = w_g$
+            \STATE $matching[i][j] = group$
+        \ENDIF
+    \ENDFOR
+    \FOR{y=1 TO j-1}
+        \STATE $divide,w_d=\textsc{MemoMinMatchingRec$(blocksA, blocksB, i-1, y,matching,memo)$}$
+        \STATE $w_d = w_d + blocksA[i]/sum(blocksB[y+1]..blocksB[j])$
+        \STATE $divide.push((i,y+1)..(i,j))$
+        \IF{$w_d < w$}
+            \STATE $w = w_d$
+            \STATE $matching[i][j] = divide$
+        \ENDIF
+    \ENDFOR
+    \STATE $memo[i][j] = w$
+    \RETURN $matching[i][j],w$
+\end{algorithmic}
+\subsubsection*{Análisis}
+El tiempo de complejidad del algoritmo es $O(mn)$. Se crea una tabla $memo$ de tamaño $m*n$ para almacenar los resultados calculados por primera vez. Es decir, la recurrencia solo demora $m*n$ llamadas en llenar la tabla, y después todas las llamadas son constantes. 
+
+\subsubsection*{Implementación}
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta4.cpp}{link}.
