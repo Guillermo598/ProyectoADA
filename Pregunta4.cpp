@@ -43,8 +43,8 @@ std::vector<int> getBlocks(std::vector<int> array) {
 }
 
 double MemoMinMatching(std::vector<int> A, std::vector<int> B, std::vector<std::pair<int,int>>* Matching) {
-    std::vector<int> blocksA = getBlocks(A);
-    std::vector<int> blocksB = getBlocks(B);
+    std::vector<int> blocksA = getBlocks(std::move(A));
+    std::vector<int> blocksB = getBlocks(std::move(B));
     int m = blocksA.size();
     int n = blocksB.size();
     double** memo;
