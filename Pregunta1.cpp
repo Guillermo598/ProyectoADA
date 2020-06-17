@@ -26,7 +26,7 @@ std::vector<int> getBlocks(std::vector<int> array) {
     std::vector<int> blocks;
     auto arrayIt = array.begin();
     while (arrayIt != array.end()) {
-        while (*arrayIt == 0)
+        while (*arrayIt == 0 && arrayIt != array.end())
             arrayIt++;
         int size = 0;
         if (*arrayIt == 1) {
