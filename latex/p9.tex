@@ -1,0 +1,39 @@
+\subsection*{Pregunta 9 (Animación)}
+
+\subsubsection*{Pseudocódigo}
+Se calcula el promedio de cada pixel de amnas imagenes para crear la imagen resultante, y se recibe un parametro extra para definir cual algoritmo se quiere utilizar para realizar el matching.
+\subsubsection*{}
+Recibe: Dos imágenes y un parámetro para elección de algoritmo
+
+Devuelve: El peso del matching y la transformación de la imagen
+\begin{algorithmic}[1]
+  \TITLE{\textsc{transformImages}$(imageA, imageB, method)$}
+  \STATE $matrixA = load(imageA)$
+  \STATE $matrixB = load(imageB)$
+  \IF{$method == 0$}
+    \STATE $peso = GreedyMinTransform(matrixA, matrixB, transform)$
+  \ELSIF{$method == 1$}
+    \STATE $peso = DPMinTransform(matrixA, matrixB, transform)$
+  \ELSIF{$method == 2$}
+    \STATE $peso = DPMinTransformMean(matrixA, matrixB, transform)$
+  \ENDIF
+  \STATE $\textsc{getTransition(imageA, imageB)}$
+  \RETURN $peso$
+\end{algorithmic}
+
+\subsubsection*{}
+Recibe: Dos imágenes
+
+Devuelve: Una transformación de imagen
+\begin{algorithmic}[1]
+  \TITLE{\textsc{getTransition}$(imageA, imageB)$}
+  \STATE $A = load(imageA)$
+  \STATE $B = load(imageB)$
+  \FOR{$i=0$ TO $A.size$}
+    \STATE $transition[i] = (A[i] + B[i])/2$
+  \ENDFOR
+  \STATE $write\_jpg(transition)$
+\end{algorithmic}
+
+\subsubsection*{Implementación}
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta9.cpp}{link}.

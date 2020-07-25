@@ -1,7 +1,23 @@
-\subsection*{Pregunta 5 (Programación dinámica)}
+\subsection*{Pregunta 7 (Programación dinámica)}
 \subsubsection*{Pseudocódigo}
-Este primer algoritmo es el principal. Transforma los arreglos a bloques, crea los arreglos donde se guardarán los pesos con sus respectivos matching y llama al algoritmo donde se comienza a llenar la tabla. Los pesos y sus respectivos matching se obtendrán de valor ya calculados anteriormente.
+Se añade un algoritmo adicional a los de la pregunta 5, el cual recorre cada linea de las matrices y hace el matching con el algoritmo de programación dinamica entre ellas retornando la suma del peso de todos los matchings.
+
 \subsubsection*{}
+Recibe: dos matrices de ceros y unos
+
+Devuelve: una transformación entre las dos matrices y su peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{DPMinTransform}$(A, B)$}
+  \STATE $m=A.size$
+  \FOR{i=1 TO m}
+    \STATE $matching[i],w_g=${\textsc{DPMinMatching}$(A[i], B[i])$}
+    \STATE $w+=w_g$
+  \ENDFOR
+  \RETURN $matching,w$
+   
+\end{algorithmic}
+\subsubsection*{}
+
 Recibe: dos arreglos de ceros y unos
 
 Devuelve: un matching de peso mínimo entre los dos arreglos, y el respectivo peso
@@ -60,7 +76,7 @@ Devuelve: un matching entre los bloques usados de peso mínimo
     \ENDIF
 \end{algorithmic}
 \subsubsection*{Análisis}
-Se crea una tabla $matching$ de tamaño $m*n$ para almacenar los resultados. Esta se va llenando cada casilla de arriba a abajo y de izquierda a derecha calculando cada nuevo valor con los resultados anteriores de la misma tabla. Por lo que tenemos una complejidad de $O(mn)$ al terminar de recorrer toda la tabla.
+Al tener dos matrices de tamaño $p*q$, el tiempo de complejidad de todo el algoritmo aumenta a $O(pq^2)$ ya que la función extra $DPMinMatchingMatrix$ recorre cada fila de ambas matrices y calculando el matching, con un algoritmo de programación dinámica, en cada una de ellas.
 
 \subsubsection*{Implementación}
-La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta5.cpp}{link}.
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta7.cpp}{link}.

@@ -37,7 +37,7 @@
 
 \section{Secuencias}
 \subsection*{Introducción}
-En este informe presentaremos tres distintos algoritmos para resolver el problema de Sequencias. Implementaremos un algoritmo voraz, otro recursivo y finalmente otro memoizado. El objetivo del algoritmo consiste en calcular el mínimo peso de un matching de dos arreglos ya existentes y devolver dicho matching. Un matching corresponde a una transformación entre de bloques de A hacia los bloques de B, tal que algunos bloques de A son divididos y otros bloques de son agrupados. El peso total de un matching es la suma de los pesos de todos los bloques que se dividen y los pesos todos los bloques que se agrupan, el peso de una división se calcula $\frac{|\text{bloque de }A|}{\text{suma de }|\text{bloques de }B_j|}$ y el peso de una agrupación de calcula $\frac{\text{suma de }|\text{bloques de }A_i|}{|\text{bloque de }B|}$.\\
+Presentaremos cuatro distintos algoritmos para resolver el problema de Sequencias. Implementaremos un algoritmo voraz, otro recursivo, otro memoizado y finalmente otro con programación dinámcia. El objetivo del algoritmo consiste en calcular el mínimo peso de un matching de dos arreglos ya existentes y devolver dicho matching. Un matching corresponde a una transformación entre de bloques de A hacia los bloques de B, tal que algunos bloques de A son divididos y otros bloques de son agrupados. El peso total de un matching es la suma de los pesos de todos los bloques que se dividen y los pesos todos los bloques que se agrupan, el peso de una división se calcula $\frac{|\text{bloque de }A|}{\text{suma de }|\text{bloques de }B_j|}$ y el peso de una agrupación de calcula $\frac{\text{suma de }|\text{bloques de }A_i|}{|\text{bloque de }B|}$.\\
 
 
 
@@ -48,11 +48,22 @@ Un ejemplo de división son los de color azul y un ejemplo de agrupación son lo
 \centering
 \end{figure}
 
-\subsection*{Repositorio}
-El repositorio con todos los algoritmos se encuentran en el siguiente \href{https://github.com/Guillermo598/ProyectoADA}{link}.
 \input{p1}
 \input{p2}
 \input{p3}
 \input{p4}
+\input{p5}
 
+\section{Transformación de imágenes}
+\subsection*{Introducción}
+El objetivo de estos algoritmos son encontrar el peso mínimo de una transformación de dos matrices dadas. Una transformación consiste en un conjunto de matchings y el peso de esta transformación es calculado por la suma del peso de todos los matchings.
+
+\input{p6}
+\input{p7}
+\input{p8}
+\input{p9}
+\input{p10}
+
+\subsection*{Repositorio}
+El repositorio con todos los algoritmos se encuentran en el siguiente \href{https://github.com/Guillermo598/ProyectoADA}{link}.
 \end{document}

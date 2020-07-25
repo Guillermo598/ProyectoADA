@@ -1,0 +1,29 @@
+\subsection*{Pregunta 8 (Lectura de imágenes)}
+\subsubsection*{Pseudocódigo}
+Lee una imagen y como arrays de chars, cada componente R, G y B es representado por un char. Luego estos chars son convertidos a ints y se multiplica con una constante para calcular la luminansia y se compara con el umbral y se define si es 1 o 0.
+
+\subsubsection*{}
+Recibe: una imagen, el umbral, y las tres constantes de R, G y B
+
+Devuelve: una matriz de 0 y 1
+\begin{algorithmic}[1]
+  \TITLE{\textsc{getMatrixFromPNG}$(file, umbral, R, G, B)$}
+  \STATE $image = load(file)$
+  \STATE $matrix[height][width]$
+  \FOR{i=1 TO height}
+    \FOR{j=1 TO width}
+        \STATE $pixelOffset = image + (j + width * i) * 3$
+        \STATE $Y = R*pixelOffset[0] + G*pixelOffset[1] + B*pixelOffset[2]$
+        \IF{Y $>$ umbral}
+            \STATE $vec[j] = 0$
+        \ELSE 
+            \STATE $vec[j] = 1$
+        \ENDIF
+    \ENDFOR
+    \STATE $matrix[i] = vec$
+  \ENDFOR
+  \RETURN $matrix$
+   
+\end{algorithmic}
+\subsubsection*{Implementación}
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta8.cpp}{link}.

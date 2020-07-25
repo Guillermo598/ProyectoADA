@@ -1,21 +1,39 @@
-\subsection*{Pregunta 5 (Programación dinámica)}
+\subsection*{Pregunta 10 (Programación dinámica)}
 \subsubsection*{Pseudocódigo}
-Este primer algoritmo es el principal. Transforma los arreglos a bloques, crea los arreglos donde se guardarán los pesos con sus respectivos matching y llama al algoritmo donde se comienza a llenar la tabla. Los pesos y sus respectivos matching se obtendrán de valor ya calculados anteriormente.
+Se agrega una resta luego de cada calculo de agrupación y división $
+\Bar{w}=w-\mu$ y se utuliza el algpritmo de la pregunta 7.
+
 \subsubsection*{}
+Recibe: dos matrices de ceros y unos
+
+Devuelve: una transformación entre las dos matrices y su peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{DPMinTransformMean}$(A, B)$}
+  \STATE $m=A.size$
+  \FOR{i=1 TO m}
+    \STATE $matching[i],w_g=${\textsc{DPMinMatching}$(A[i], B[i])$}
+    \STATE $w+=w_g$
+  \ENDFOR
+  \RETURN $matching,w$
+   
+\end{algorithmic}
+\subsubsection*{}
+
 Recibe: dos arreglos de ceros y unos
 
 Devuelve: un matching de peso mínimo entre los dos arreglos, y el respectivo peso
 \begin{algorithmic}[1]
-  \TITLE{\textsc{DPMinMatching}}$(A,B)$
+  \TITLE{\textsc{DPMinMatchingMean}}$(A,B)$
   \STATE $blocksA = \textsc{GetBlocks$(A)$}$
   \STATE $blocksB = \textsc{GetBlocks$(B)$}$
   \STATE $m = blocksA.size$
   \STATE $n = blocksB.size$
   \STATE $matching[m][n]$
+  \STATE $\mu = sum(blocksA[i])/sum(blocksB[j])$
   \FOR {i=1 TO m}
     \STATE $peso[i]=[n]$
     \FOR{j=1 TO n}
-        \STATE $\textsc{DPMinMatchingRec$(blocksA,blocksB,i,j,matching,peso)$}$
+        \STATE $\textsc{DPMinMatchingMeanRec$(blocksA,blocksB,i,j,matching,peso,\mu)$}$
     \ENDFOR
   \ENDFOR
   \RETURN $peso[m][n]$
@@ -25,16 +43,16 @@ Recibe: dos arreglos de tamaños de bloques, la cantidad de bloques a usar, y la
 
 Devuelve: un matching entre los bloques usados de peso mínimo
 \begin{algorithmic}[1]
-  \TITLE{\textsc{DPMinMatchingRec}}$(blocksA,blocksB,i,j,matching,peso)$
+  \TITLE{\textsc{DPMinMatchingMeanRec}}$(blocksA,blocksB,i,j,matching,peso, \mu)$
   \IF{$i=1$}
     \STATE $w=blocksA[1]/(sum(blocksB[1]..blocksB[j])$
     \STATE $matching[i][j].push((1,1)..(1,j))$
-    \STATE $peso[i][j] = w$
+    \STATE $peso[i][j] = |w - \mu|$
   \ENDIF
   \IF{$j=1$}
     \STATE $w=sum(blocksA[1]..blocksA[i])/blocksB[1]$
     \STATE $matching[i][j].push((1,1)..(i,1))$
-    \STATE $peso[i][j] = w$
+    \STATE $peso[i][j] = |w - \mu|$
   \ELSE
     \STATE $peso[i][j] = INF$
     \FOR{x=1 TO i-1}
@@ -42,8 +60,9 @@ Devuelve: un matching entre los bloques usados de peso mínimo
         \STATE $w=w+sum(blocksA[x+1]..blocksA[i])/blocksB[j]$
         \STATE $newMatching=matching[x][j-1]$
         \STATE $newMatching.push((x+1,j)..(i,j)$
-        \IF{$w < peso[i][j]$}
-            \STATE $peso[i][j] = w$
+        \STATE $\Bar{w} = |w - \mu|$
+        \IF{$\Bar{w} < peso[i][j]$}
+            \STATE $peso[i][j] = \Bar{w}$
             \STATE $matching[i][j] = newMatching$
         \ENDIF
     \ENDFOR
@@ -52,15 +71,15 @@ Devuelve: un matching entre los bloques usados de peso mínimo
         \STATE $w=w+blocksA[i]/sum(blocksB[y+1]..blocksB[j])$
         \STATE $newMatching=matching[i-1][y]$
         \STATE $newMatching.push((i,y+1)..(i,j)$
-        \IF{$w < peso[i][j]$}
-            \STATE $peso[i][j] = w$
+        \STATE $\Bar{w} = |w - \mu|$
+        \IF{$\Bar{w} < peso[i][j]$}
+            \STATE $peso[i][j] = \Bar{w}$
             \STATE $matching[i][j] = newMatching$
         \ENDIF
     \ENDFOR
     \ENDIF
 \end{algorithmic}
 \subsubsection*{Análisis}
-Se crea una tabla $matching$ de tamaño $m*n$ para almacenar los resultados. Esta se va llenando cada casilla de arriba a abajo y de izquierda a derecha calculando cada nuevo valor con los resultados anteriores de la misma tabla. Por lo que tenemos una complejidad de $O(mn)$ al terminar de recorrer toda la tabla.
-
+El tiempo de ejecución es igual que el de la pregunta 7 $O(pq^2)$, ya que solo se agrega una resta al peso cada vez que se calcula el peso de una división o una agrupación,
 \subsubsection*{Implementación}
-La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta5.cpp}{link}.
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta10.cpp}{link}.

@@ -1,0 +1,90 @@
+\section*{Pregunta 6 (Voraz)}
+\subsubsection*{Pseudocodigo}
+
+Acá se toma el algoritmo voraz planteado previamente, y se aplica por cada fila de las dos matrices, guardando los pesos de los matching en una suma total.
+
+\subsubsection*{}
+Recibe: dos matrices de ceros y unos
+
+Devuelve: una transformación entre las dos matrices y su peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{GreedyMinTransform}$(A, B)$}
+  \STATE $m=A.size$
+  \FOR{i=1 TO m}
+    \STATE $matching[i],w_g=${\textsc{GreedyMinMatching}$(A[i], B[i])$}
+    \STATE $w+=w_g$
+  \ENDFOR
+  \RETURN $matching,w$
+   
+\end{algorithmic}
+
+\subsubsection*{}
+Recibe: un arreglo de ceros y unos
+
+Devuelve: un arreglo de tamaños de los bloques
+\begin{algorithmic}[1]
+  \TITLE{\textsc{GetBlocks}$(array)$}
+  \STATE $i = 1$
+  \WHILE{$i < array.size$}
+    \WHILE{$array[i] == 0$}
+        \STATE $i = i + 1$
+    \ENDWHILE
+    \STATE $size = 0$
+    \IF{$array[i] == 1$}
+        \WHILE{$array[i] == 1$}
+            \STATE $size = size + 1$
+            \STATE $i = i + 1$
+        \ENDWHILE
+        \STATE $blocks.push(size)$
+    \ENDIF
+  \ENDWHILE
+  \RETURN $blocks$
+\end{algorithmic}
+\subsubsection*{}
+Recibe: dos arreglos de ceros y unos
+
+Devuelve: un matching entre los dos arreglos y su peso
+\begin{algorithmic}[1]
+  \TITLE{\textsc{GreedyMinMatching}$(A, B)$}
+  \STATE $blocksA = \textsc{GetBlocks$(A)$}$
+  \STATE $blocksB = \textsc{GetBlocks$(B)$}$
+  \STATE $m = blocksA.size$
+  \STATE $n = blocksB.size$
+  \IF{$m > n$} 
+    \STATE $max_i = ratio = m/n$
+    \STATE $j = 1$
+    \FOR{$i=1$ TO m}
+        \IF{$i \leq max_i$}
+            \STATE $num = num + blocksA[i]$
+        \ELSE
+            \STATE $w = w + num/blocksB[j]$
+            \STATE $num = blocksA[i]$
+            \STATE $max_i = max_i + ratio$
+            \STATE $j = j + 1$
+        \ENDIF
+        \STATE $matching.push(i,j)$
+    \ENDFOR
+    \STATE $w = w + num/blocksB[j]$
+  \ELSE
+    \STATE $max_j = ratio = n/m$
+    \STATE $i = 1$
+    \FOR{$j=1$ TO n}
+        \IF{$j \leq max_j$}
+            \STATE $den = den + blocksB[j]$
+        \ELSE
+            \STATE $w = w + blocksA[i]/den$
+            \STATE $den = blocksB[j]$
+            \STATE $max_j = max_j + ratio$
+            \STATE $i = i + 1$
+        \ENDIF
+        \STATE $matching.push(i,j)$
+    \ENDFOR
+    \STATE $w = w + blocksA[i]/den$
+  \ENDIF
+  \RETURN $matching, w$
+\end{algorithmic}
+\subsubsection*{Análisis}
+Al tener dos matrices de tamaño $p*q$, el tiempo de complejidad de todo el algoritmo aumenta a $O(pq)$ ya que la función extra $GreedyMinMatchingMatrix$ recorre cada fila de ambas matrices y calculando el matching, con un algoritmo voraz, en cada una de ellas.
+
+\subsubsection*{Implementación}
+La implementación del algoritmo en C++ se puede encontrar en el siguiente \href{https://github.com/Guillermo598/ProyectoADA/blob/master/Pregunta6.cpp}{link}.
